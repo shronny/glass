@@ -10,6 +10,10 @@ export async function POST(
   const { id } = await params;
   const snapshotId = parseInt(id, 10);
 
+  if (isNaN(snapshotId)) {
+    return NextResponse.json({ error: "Invalid snapshot ID" }, { status: 400 });
+  }
+
   const snapshot = await getSnapshotById(snapshotId);
   if (!snapshot) {
     return NextResponse.json({ error: "Snapshot not found" }, { status: 404 });
@@ -30,6 +34,21 @@ export async function POST(
     return NextResponse.json({ error: "rows must be a non-empty array" }, { status: 400 });
   }
 
+  const invalid = rows.some(
+    (r: Record<string, unknown>) =>
+      typeof r.label !== "string" || r.label.trim() === "" ||
+      typeof r.quantity !== "number" || r.quantity <= 0 ||
+      typeof r.strike_price_usd !== "number" ||
+      typeof r.current_price_usd !== "number" ||
+      typeof r.is_vested !== "boolean"
+  );
+  if (invalid) {
+    return NextResponse.json(
+      { error: "Each row must have label (string), quantity (number > 0), strike_price_usd (number), current_price_usd (number), is_vested (boolean)" },
+      { status: 400 }
+    );
+  }
+
   const rate = Number(fxRate.usdToIls);
   const optionRows = rows.map((r: {
     label: string;
@@ -46,6 +65,11 @@ export async function POST(
     isVested: r.is_vested,
   }));
 
-  const inserted = await addOptions(snapshotId, optionRows);
-  return NextResponse.json(inserted, { status: 201 });
+  try {
+    const inserted = await addOptions(snapshotId, optionRows);
+    return NextResponse.json(inserted, { status: 201 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
 }

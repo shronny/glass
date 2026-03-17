@@ -9,6 +9,10 @@ export async function POST(
   const { id } = await params;
   const snapshotId = parseInt(id, 10);
 
+  if (isNaN(snapshotId)) {
+    return NextResponse.json({ error: "Invalid snapshot ID" }, { status: 400 });
+  }
+
   const snapshot = await getSnapshotById(snapshotId);
   if (!snapshot) {
     return NextResponse.json({ error: "Snapshot not found" }, { status: 404 });
@@ -25,6 +29,11 @@ export async function POST(
     return NextResponse.json({ error: "Values must be non-negative" }, { status: 400 });
   }
 
-  const row = await addCashflow(snapshotId, String(income_ils), String(expenses_ils));
-  return NextResponse.json(row, { status: 201 });
+  try {
+    const row = await addCashflow(snapshotId, String(income_ils), String(expenses_ils));
+    return NextResponse.json(row, { status: 201 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
 }
