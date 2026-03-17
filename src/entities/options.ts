@@ -2,7 +2,7 @@ import { db } from "@/db";
 import { options } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
-interface OptionRow {
+export interface OptionRow {
   label: string;
   quantity: string;
   strikePriceUsd: string;

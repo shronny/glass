@@ -2,7 +2,7 @@ import { db } from "@/db";
 import { liabilities } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
-interface LiabilityRow {
+export interface LiabilityRow {
   label: string;
   balanceIls: string;
 }

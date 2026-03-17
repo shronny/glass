@@ -2,7 +2,7 @@ import { db } from "@/db";
 import { stocks } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
-interface StockRow {
+export interface StockRow {
   ticker: string;
   quantity: string;
   priceUsd: string;

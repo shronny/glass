@@ -2,7 +2,7 @@ import { db } from "@/db";
 import { kupatHisachon } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
-interface PensionRow {
+export interface PensionRow {
   provider: string;
   balanceIls: string;
 }

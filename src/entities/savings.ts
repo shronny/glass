@@ -2,7 +2,7 @@ import { db } from "@/db";
 import { kerenHishtalmut } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
-interface SavingsRow {
+export interface SavingsRow {
   accountLabel: string;
   balanceIls: string;
 }
