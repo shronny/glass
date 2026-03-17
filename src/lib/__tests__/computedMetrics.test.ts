@@ -47,6 +47,25 @@ describe("computeMetrics", () => {
     });
     expect(result.netWorthIls).toBe(300000);
     expect(result.liquidAssetsIls).toBe(80000);
+    expect(result.illiquidAssetsIls).toBe(250000);
+    expect(result.usdExposureIls).toBe(80000);
+    expect(result.ilsExposureIls).toBe(250000);
+    expect(result.monthlyFreeCash).toBe(0);
+  });
+
+  it("handles decimal string values from database", () => {
+    const result = computeMetrics({
+      stocks: [{ valueIls: "100000.50" }, { valueIls: "50000.25" }],
+      options: [],
+      savings: [{ balanceIls: "200000.75" }],
+      pension: [],
+      liabilities: [{ balanceIls: "10000.10" }],
+      cashflow: [{ freeCashIls: "5000.30" }],
+    });
+    expect(result.liquidAssetsIls).toBeCloseTo(150000.75, 2);
+    expect(result.illiquidAssetsIls).toBeCloseTo(200000.75, 2);
+    expect(result.netWorthIls).toBeCloseTo(340001.40, 2);
+    expect(result.monthlyFreeCash).toBeCloseTo(5000.30, 2);
   });
 
   it("handles negative option values (underwater)", () => {

@@ -1,4 +1,4 @@
-interface MetricsInput {
+export interface MetricsInput {
   stocks: { valueIls: string }[];
   options: { valueIls: string }[];
   savings: { balanceIls: string }[];
@@ -7,7 +7,7 @@ interface MetricsInput {
   cashflow: { freeCashIls: string }[];
 }
 
-interface ComputedMetrics {
+export interface ComputedMetrics {
   netWorthIls: number;
   liquidAssetsIls: number;
   illiquidAssetsIls: number;
