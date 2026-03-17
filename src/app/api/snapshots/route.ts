@@ -5,7 +5,9 @@ export async function POST(request: NextRequest) {
   const body = await request.json();
   const { month, year, notes } = body;
 
-  if (!month || !year || month < 1 || month > 12) {
+  const monthNum = Number(month);
+  const yearNum = Number(year);
+  if (!month || !year || !Number.isInteger(monthNum) || !Number.isInteger(yearNum) || monthNum < 1 || monthNum > 12 || yearNum < 2000 || yearNum > 2100) {
     return NextResponse.json({ error: "Invalid month or year" }, { status: 400 });
   }
 
