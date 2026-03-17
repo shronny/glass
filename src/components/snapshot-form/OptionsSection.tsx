@@ -1,5 +1,3 @@
-"use client";
-
 export interface OptionEntry {
   label: string;
   quantity: string;

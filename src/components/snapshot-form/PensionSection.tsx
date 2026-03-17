@@ -1,5 +1,3 @@
-"use client";
-
 export interface PensionEntry {
   provider: string;
   balanceIls: string;

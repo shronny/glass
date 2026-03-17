@@ -14,6 +14,6 @@ if [ -z "$CONTAINER" ]; then
   exit 1
 fi
 
-docker compose exec -T db pg_dump -U glass glass | gzip > "${BACKUP_DIR}/${FILENAME}"
+docker exec "$CONTAINER" pg_dump -U glass glass | gzip > "${BACKUP_DIR}/${FILENAME}"
 
 echo "Backup saved to backups/${FILENAME}"

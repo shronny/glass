@@ -1,5 +1,3 @@
-"use client";
-
 interface CashflowSectionProps {
   incomeIls: string;
   expensesIls: string;

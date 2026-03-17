@@ -8,6 +8,7 @@ import { SavingsSection, SavingsEntry } from "@/components/snapshot-form/Savings
 import { PensionSection, PensionEntry } from "@/components/snapshot-form/PensionSection";
 import { LiabilitiesSection, LiabilityEntry } from "@/components/snapshot-form/LiabilitiesSection";
 import { CashflowSection } from "@/components/snapshot-form/CashflowSection";
+import { SummaryBar } from "@/components/snapshot-form/SummaryBar";
 
 export default function NewSnapshotPage() {
   const now = new Date();
@@ -151,7 +152,7 @@ export default function NewSnapshotPage() {
         results.push({ section: "Cashflow", ok: res.ok });
       }
     } catch (err) {
-      results.push({ section: "Snapshot", ok: false });
+      results.push({ section: err instanceof Error ? err.message : "Unknown error", ok: false });
     }
 
     setStatus(results);
@@ -224,36 +225,16 @@ export default function NewSnapshotPage() {
       <hr />
 
       {/* Summary Bar */}
-      <section className="bg-gray-50 rounded-lg p-4 space-y-2">
-        <h2 className="text-lg font-semibold">Summary</h2>
-        {(() => {
-          const stocksVal = stocks.reduce((sum, r) => {
-            const v = Number(r.quantity) * Number(r.priceUsd) * fxRateNum;
-            return sum + (isNaN(v) ? 0 : v);
-          }, 0);
-          const optionsVal = options.reduce((sum, r) => {
-            const v = Number(r.quantity) * (Number(r.currentPriceUsd) - Number(r.strikePriceUsd)) * fxRateNum;
-            return sum + (isNaN(v) ? 0 : v);
-          }, 0);
-          const savingsVal = savings.reduce((sum, r) => sum + (Number(r.balanceIls) || 0), 0);
-          const pensionVal = pension.reduce((sum, r) => sum + (Number(r.balanceIls) || 0), 0);
-          const liabilitiesVal = liabilities.reduce((sum, r) => sum + (Number(r.balanceIls) || 0), 0);
-          const freeCash = (Number(incomeIls) || 0) - (Number(expensesIls) || 0);
-          const netWorth = stocksVal + optionsVal + savingsVal + pensionVal - liabilitiesVal;
-          const fmt = (n: number) => n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-
-          return (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
-              <div><span className="text-gray-500">Net Worth:</span> <span className="font-mono font-semibold">{fmt(netWorth)} ILS</span></div>
-              <div><span className="text-gray-500">Liquid (Stocks):</span> <span className="font-mono">{fmt(stocksVal)} ILS</span></div>
-              <div><span className="text-gray-500">Illiquid:</span> <span className="font-mono">{fmt(savingsVal + pensionVal)} ILS</span></div>
-              <div><span className="text-gray-500">USD Exposure:</span> <span className="font-mono">{fmt(stocksVal + optionsVal)} ILS</span></div>
-              <div><span className="text-gray-500">ILS Exposure:</span> <span className="font-mono">{fmt(savingsVal + pensionVal)} ILS</span></div>
-              <div><span className="text-gray-500">Free Cash:</span> <span className="font-mono">{fmt(freeCash)} ILS</span></div>
-            </div>
-          );
-        })()}
-      </section>
+      <SummaryBar
+        stocks={stocks}
+        options={options}
+        savings={savings}
+        pension={pension}
+        liabilities={liabilities}
+        incomeIls={incomeIls}
+        expensesIls={expensesIls}
+        fxRate={fxRateNum}
+      />
       <hr />
 
       {/* Save */}

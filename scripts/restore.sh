@@ -21,7 +21,13 @@ if [ -z "$CONTAINER" ]; then
   exit 1
 fi
 
+read -r -p "This will overwrite all data in the glass database. Continue? [y/N] " confirm
+if [[ "${confirm,,}" != "y" ]]; then
+  echo "Aborted."
+  exit 0
+fi
+
 echo "Restoring from $BACKUP_FILE..."
-gunzip -c "$BACKUP_FILE" | docker compose exec -T db psql -U glass -d glass
+gunzip -c "$BACKUP_FILE" | docker exec -i "$CONTAINER" psql -U glass -d glass
 
 echo "Restore complete."

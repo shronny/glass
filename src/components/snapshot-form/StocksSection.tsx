@@ -1,5 +1,3 @@
-"use client";
-
 export interface StockEntry {
   ticker: string;
   quantity: string;

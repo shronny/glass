@@ -1,5 +1,3 @@
-"use client";
-
 export interface LiabilityEntry {
   label: string;
   balanceIls: string;

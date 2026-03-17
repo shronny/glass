@@ -1,5 +1,3 @@
-"use client";
-
 export interface SavingsEntry {
   accountLabel: string;
   balanceIls: string;

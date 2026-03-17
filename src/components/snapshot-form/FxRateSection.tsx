@@ -1,5 +1,3 @@
-"use client";
-
 interface FxRateSectionProps {
   value: string;
   onChange: (value: string) => void;
