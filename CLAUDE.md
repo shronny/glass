@@ -4,16 +4,19 @@
 
 ```bash
 cp .env.example .env    # First time only
-docker compose up --build -d
+docker compose up -d    # Start PostgreSQL
+npx drizzle-kit push    # Apply schema
+npm run dev             # Start Next.js locally
 npm run seed            # Optional: seed with dummy data
 ```
 
-App: http://127.0.0.1:3000
+App: http://localhost:3000
 
 ## Commands
 
-- `docker compose up --build -d` — start app + database
-- `docker compose down` — stop everything
+- `docker compose up -d` — start database
+- `docker compose down` — stop database
+- `npm run dev` — start Next.js dev server
 - `npx drizzle-kit generate` — generate migration from schema changes
 - `npx drizzle-kit push` — apply schema to database
 - `npm run seed` — seed with dummy data
