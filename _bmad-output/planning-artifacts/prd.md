@@ -41,6 +41,16 @@ Glass is a household financial audit and wealth intelligence platform. It ingest
 - **Project context:** Greenfield — complete rebuild from prior codebase
 - **Stack:** Supabase (database + auth), client-side Next.js app
 
+## Design Philosophy
+
+Glass is a mirror, not an analytics tool.
+
+- **No complexity.** No charts you don't need. Just the numbers.
+- **If it requires explanation, it's too complex.** Every screen must be immediately obvious to a non-technical user.
+- **Fewer features done perfectly beats more features done adequately.** When in doubt, cut.
+- **Clarity and control, not insight generation.** Glass tells you what is, not what might be.
+- **Friction is failure.** Any step that feels like work is a bug.
+
 ## Success Criteria
 
 ### User Success
@@ -97,12 +107,11 @@ Glass is a household financial audit and wealth intelligence platform. It ingest
 - Full adaptive extraction for all 4-7 household institutions (auto-processed monthly)
 - Quarterly and semi-annual report handling
 - Liquidity intelligence: when to pay down mortgage vs hold assets
-- Trend charts — net worth over time, asset allocation shifts
+- Single net worth trend line — one simple chart showing wealth over time, nothing more
 
 ### Vision (Future)
 
 - Predictive scenarios: "if market drops 20%, your net worth looks like X"
-- Tax efficiency insights
 - Multi-household or advisor mode
 
 ## User Journeys
