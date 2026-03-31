@@ -1,5 +1,5 @@
 ---
-stepsCompleted: ['step-01-init', 'step-02-discovery', 'step-02b-vision', 'step-02c-executive-summary', 'step-03-success']
+stepsCompleted: ['step-01-init', 'step-02-discovery', 'step-02b-vision', 'step-02c-executive-summary', 'step-03-success', 'step-04-journeys', 'step-05-domain', 'step-06-innovation']
 classification:
   projectType: 'web_app'
   domain: 'fintech'
@@ -104,3 +104,78 @@ Glass is a household financial audit and wealth intelligence platform. It ingest
 - Predictive scenarios: "if market drops 20%, your net worth looks like X"
 - Tax efficiency insights
 - Multi-household or advisor mode
+
+## User Journeys
+
+### Journey 1: Monthly Review Session
+
+**Trigger:** Start of month — new statements available from institutions.
+
+1. Ronny logs in to Glass
+2. Uploads batch of PDFs (4-7 institution statements) in one session
+3. Glass processes documents in background — extracts and reconciles data
+4. Dashboard updates automatically with full household picture
+5. Ronny reviews: net worth, year P&L, owner breakdown, any discrepancies flagged
+6. If a file is missing — Glass shows the gap clearly; Ronny fills it in manually
+7. Session complete — Ronny knows his financial position
+
+**Success:** All three control questions answered in one session. No hunting for data.
+
+### Journey 2: Backfill Session
+
+**Trigger:** First time using Glass, or adding historical data for older periods.
+
+1. Ronny uploads historical PDFs in bulk (20+ documents across multiple years/institutions)
+2. Glass processes each document, assigns it to the correct period and institution
+3. Ronny manually enters data for periods where no document exists
+4. Historical dashboard materializes — Glass shows wealth history from earliest available data
+5. Ronny sees his complete financial picture for the first time
+
+**Success:** Complete historical picture visible. No period left blank without a clear reason.
+
+### Journey 3: Discrepancy Drill-Down
+
+**Trigger:** Glass flags that a fund underperformed its benchmark.
+
+1. Dashboard surfaces discrepancy — e.g. "Harel fund: +6% vs S&P +10% this quarter"
+2. Ronny clicks to drill in
+3. Glass shows side-by-side: fund reported performance vs index actual performance, period by period
+4. Ronny sees the full gap history — is this a one-off or a pattern?
+5. Ronny decides whether to act (switch funds, ask institution, hold)
+
+**Success:** Ronny can see the gap, understand if it's a pattern, and make an informed decision.
+
+## Innovation & Novel Patterns
+
+### Detected Innovation Areas
+
+**1. Adaptive Institution Onboarding**
+Glass doesn't ship with hardcoded parsers for specific institutions. Instead, it learns each institution's document format during onboarding and stores that knowledge as a reusable template. As institutions change formats or new institutions are added, Glass adapts. This is fundamentally different from existing tools that require manual CSV exports or proprietary bank integrations.
+
+**2. Two-Stream Historical Reconstruction**
+Glass combines two independent data streams — auto-fetched stock/index API history (complete, going back years) and manually uploaded institution documents (pension, savings, funds) — to reconstruct a unified wealth history that neither stream could produce alone. The result: a complete financial timeline that materializes from existing data, not future inputs.
+
+**3. Discrepancy Detection as a Core Feature**
+Most financial dashboards aggregate and display data. Glass adds a layer of adversarial analysis — it cross-references what your institution reports against what the market actually did and surfaces the gap explicitly. This positions Glass as a financial auditor, not just a tracker.
+
+**4. Backfill as Activation**
+The product's value isn't realized gradually over months — it materializes the moment historical documents are uploaded. The backfill session is the product launch moment: years of financial history appear at once, turning Glass from a future tracker into an immediate historical record.
+
+### Market Context & Competitive Landscape
+
+Existing solutions (Mint, Personal Capital, Israeli equivalents) rely on bank API integrations — they track going forward, don't handle Israeli pension/savings products well, and never challenge institution-reported performance. Glass fills a gap: household-level financial audit with document intelligence, benchmarking, and historical reconstruction — without requiring institutional API access.
+
+### Validation Approach
+
+- **Adaptive extraction validated** when 2+ institutions are successfully onboarded at ≥95% accuracy
+- **Discrepancy detection validated** when at least one real fund vs index gap is surfaced from actual uploaded data
+- **Historical reconstruction validated** when backfill session produces a complete multi-year wealth timeline
+
+### Risk Mitigation
+
+| Risk | Mitigation |
+|------|------------|
+| PDF extraction fails for an institution | Manual entry fallback; extraction improves over time as format is learned |
+| Institution changes PDF format | Re-onboarding flow; previous extractions remain valid |
+| Market data API unavailable | Cache last-known values; flag stale data clearly |
+| Extracted data contains errors | Immutable audit trail — all data traceable to source; correction by appending, not overwriting |
