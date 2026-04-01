@@ -1,5 +1,5 @@
 ---
-stepsCompleted: ['step-01-init', 'step-02-discovery', 'step-02b-vision', 'step-02c-executive-summary', 'step-03-success', 'step-04-journeys', 'step-05-domain', 'step-06-innovation']
+stepsCompleted: ['step-01-init', 'step-02-discovery', 'step-02b-vision', 'step-02c-executive-summary', 'step-03-success', 'step-04-journeys', 'step-05-domain', 'step-06-innovation', 'step-07-project-type', 'step-08-scoping']
 classification:
   projectType: 'web_app'
   domain: 'fintech'
@@ -89,31 +89,6 @@ Glass is a mirror, not an analytics tool.
 
 ---
 
-## Product Scope
-
-### MVP — Foundation & First Picture
-
-- Household asset model with owner tagging (Ronny / wife / joint)
-- PDF upload + institution onboarding (learn the format, extract data) — primary input method
-- Manual entry as fallback per institution only
-- Stock price history via API — auto-fetch historical values
-- Bulk backfill: upload 20+ historical documents, Glass assigns period and institution
-- Net worth dashboard: total now + year P&L + owner breakdown
-- Discrepancy view: fund performance vs index benchmark
-- Premium financial product aesthetic
-
-### Growth Features (Post-MVP)
-
-- Full adaptive extraction for all 4-7 household institutions (auto-processed monthly)
-- Quarterly and semi-annual report handling
-- Liquidity intelligence: when to pay down mortgage vs hold assets
-- Single net worth trend line — one simple chart showing wealth over time, nothing more
-
-### Vision (Future)
-
-- Predictive scenarios: "if market drops 20%, your net worth looks like X"
-- Multi-household or advisor mode
-
 ## User Journeys
 
 ### Journey 1: Monthly Review Session
@@ -153,6 +128,118 @@ Glass is a mirror, not an analytics tool.
 5. Ronny decides whether to act (switch funds, ask institution, hold)
 
 **Success:** Ronny can see the gap, understand if it's a pattern, and make an informed decision.
+
+## Project Scoping & Phased Development
+
+### MVP Strategy & Philosophy
+
+**MVP Approach:** Problem-solving MVP — deliver the minimum that gives Ronny full financial control in one session.
+
+**Core constraint:** PDF extraction is the riskiest technical piece and the biggest differentiator. MVP must prove extraction works for at least 2 institutions before anything else matters.
+
+**Resource:** Solo developer (Ronny building for himself).
+
+### Application Structure
+
+**Dashboard (default view — month-focused):**
+- Total net worth
+- Year P&L (current month vs last month, switchable to YTD or custom period via period picker)
+- Owner breakdown (Ronny / wife / joint)
+- Cashflow summary (income vs expenses this month)
+- Simple attention flags (e.g. discrepancy detected) — tap to drill in
+
+**Detail pages (one per asset type):**
+- Stocks
+- Pension (kupat hisachon)
+- Savings (keren hishtalmut)
+- Other savings
+- Liabilities (mortgage)
+- Cashflow (income/expenses by category, Excel upload)
+
+**Data-first philosophy:** The data model is the product. Correct, complete data enables any future view. UI stays minimal now — new views are added as needed without changing the foundation.
+
+### MVP Feature Set (Phase 1)
+
+**Core User Journeys Supported:** Monthly review session, Backfill session
+
+**Must-Have Capabilities:**
+- Supabase auth (household login)
+- Household asset model with owner tagging (Ronny / wife / joint)
+- PDF + screenshot upload with institution onboarding flow
+- Manual entry fallback for any asset type
+- Excel upload for monthly cashflow (income/expenses with categories)
+- Stock price history via API (twice-daily refresh)
+- Bulk backfill: 20+ documents, auto-assigned to period and institution
+- Month-focused dashboard with period picker
+- Detail page per asset type
+- Discrepancy view on pension/fund detail pages; flagged on dashboard
+- Premium financial aesthetic — clean, authoritative, Chrome desktop
+
+**Not in MVP:**
+- Cashflow backfill (starts from first Excel upload)
+- Drill-down history charts
+- Liquidity intelligence
+- Quarterly/semi-annual report auto-detection
+
+### Post-MVP Features
+
+**Phase 2 (Growth):**
+- Full adaptive extraction for all 4-7 institutions (auto-processed monthly)
+- Quarterly and semi-annual report handling
+- Liquidity intelligence: when to pay down mortgage vs hold
+- Single net worth trend line
+
+**Phase 3 (Vision):**
+- Predictive scenarios ("if market drops 20%...")
+- Multi-household or advisor mode
+
+### Risk Mitigation Strategy
+
+| Risk | Mitigation |
+|------|------------|
+| PDF extraction fails for an institution | Manual entry fallback; MVP requires only 2 institutions working |
+| Scope creep during build | Design Philosophy section is the filter — if it's not in MVP list, it waits |
+| Stock API reliability | Cache last values; flag stale data; free tier limits handled gracefully |
+| Data correctness | Append-only model + source traceability — bad data is always correctable |
+| Cashflow gaps (no historical Excel) | Cashflow starts from first upload; asset history covers the gaps |
+
+## Web App Specific Requirements
+
+### Project-Type Overview
+
+Glass is a desktop-only web application, Chrome-targeted, private (no SEO), with no real-time requirements. Stock data refreshes twice daily on a schedule. Simplicity of implementation matches the simplicity of the product.
+
+### Technical Architecture Considerations
+
+| Concern | Decision |
+|---------|----------|
+| Rendering | Next.js App Router — SSR for initial load, client-side for interactions |
+| Browser support | Chrome only — no cross-browser overhead |
+| Mobile | Not supported — desktop layout only |
+| Real-time | No WebSockets — stock data fetched twice daily via scheduled job |
+| SEO | None — private authenticated app |
+| Accessibility | Basic — single household user |
+| Auth | Supabase Auth — email/password, household-scoped |
+
+### Performance Targets
+
+| Target | Requirement |
+|--------|-------------|
+| Dashboard load | Under 2 seconds on desktop Chrome |
+| PDF upload response | Immediate acknowledgment; processing runs in background |
+| Stock data freshness | Updated twice daily; stale data clearly flagged |
+| API response | Under 500ms for all read operations |
+
+### Responsive Design
+
+Desktop-only. Minimum viewport: 1280px. No responsive breakpoints required for MVP.
+
+### Implementation Considerations
+
+- No PWA, no service workers, no offline mode
+- No push notifications — user checks Glass on their own schedule
+- File upload: support PDF and image (screenshot) formats
+- Background processing: async job queue for PDF extraction (Supabase Edge Functions or similar)
 
 ## Innovation & Novel Patterns
 
